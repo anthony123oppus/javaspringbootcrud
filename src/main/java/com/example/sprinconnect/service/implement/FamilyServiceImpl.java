@@ -9,6 +9,7 @@ import com.example.sprinconnect.repository.UserRepository;
 import com.example.sprinconnect.service.FamilyService;
 import com.example.sprinconnect.service.mappers.FamilyMapper;
 import com.example.sprinconnect.service.mappers.ResponseMapper;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,12 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public FamilyPagination<Family> getAllFamilyByUserId(int page, int size, long userId) {
+
+        Optional<User> userExist = userRepository.findById(userId);
+
+        if(userExist.isEmpty()){
+            throw new RuntimeException("User with an id of " + userId + " not found");
+        }
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
 

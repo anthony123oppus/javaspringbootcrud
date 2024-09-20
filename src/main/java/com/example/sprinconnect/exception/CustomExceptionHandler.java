@@ -34,4 +34,15 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> handleUserNotFoundException(RuntimeException ex) {
+        logger.error("UserNotFoundException occurred: ", ex);
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
 }
